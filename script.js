@@ -13,6 +13,14 @@ document.querySelectorAll(".nav-link").forEach(n => n.addEventListener("click", 
     navMenu.classList.remove("active");
 }));
 
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+        hamburger.classList.remove("active");
+        navMenu.classList.remove("active");
+    }
+});
+
 // Smooth scrolling for navigation links
 document.querySelectorAll("a[href^=\"#\"]").forEach(anchor => {
     anchor.addEventListener("click", function (e) {
@@ -29,29 +37,26 @@ document.querySelectorAll("a[href^=\"#\"]").forEach(anchor => {
     });
 });
 
-// Navbar background on scroll
+// Navbar background and active link handling
 window.addEventListener("scroll", () => {
     const navbar = document.querySelector(".navbar");
-    if (window.scrollY > 100) {
-        navbar.style.background = "rgba(255, 255, 255, 0.98)";
-        navbar.style.boxShadow = "0 2px 20px rgba(0, 0, 0, 0.1)";
-    } else {
-        navbar.style.background = "rgba(255, 255, 255, 0.95)";
-        navbar.style.boxShadow = "none";
-    }
-});
-
-// Active navigation link highlighting
-window.addEventListener("scroll", () => {
     const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll(".nav-link");
-    const navbarHeight = document.querySelector(".navbar").offsetHeight;
+    const navbarHeight = navbar.offsetHeight;
     
+    // Add scrolled class to navbar
+    if (window.scrollY > 50) {
+        navbar.classList.add("scrolled");
+    } else {
+        navbar.classList.remove("scrolled");
+    }
+    
+    // Update active link based on scroll position
     let current = "";
     sections.forEach(section => {
-        const sectionTop = section.offsetTop - navbarHeight;
+        const sectionTop = section.offsetTop - navbarHeight - 100;
         const sectionHeight = section.clientHeight;
-        if (scrollY >= sectionTop) {
+        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
             current = section.getAttribute("id");
         }
     });
@@ -81,11 +86,7 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe elements for animation
 document.addEventListener("DOMContentLoaded", () => {
-<<<<<<< HEAD
-    const animateElements = document.querySelectorAll(".timeline-item, .skill-category, .certification-card, .project-card, .stat");
-=======
     const animateElements = document.querySelectorAll(".timeline-item, .skill-category, .certification-card, .project-card, .stat, .education-item");
->>>>>>> nona
     
     animateElements.forEach(el => {
         el.style.opacity = "0";
