@@ -27,8 +27,7 @@ const debounce = (func, delay) => {
 // Performance-optimized DOM queries (cached)
 const DOM = {
     hamburger: null,
-    navMenu: null,
-    navbar: null,
+    sidebar: null,
     sections: null,
     navLinks: null,
     hero: null,
@@ -36,11 +35,11 @@ const DOM = {
     skillTags: null,
     projectCards: null,
     buttons: null,
+    mobileNavToggle: null,
     
     init() {
         this.hamburger = document.querySelector(".hamburger");
-        this.navMenu = document.querySelector(".nav-menu");
-        this.navbar = document.querySelector(".navbar");
+        this.sidebar = document.querySelector(".sidebar");
         this.sections = document.querySelectorAll("section[id]");
         this.navLinks = document.querySelectorAll(".nav-link");
         this.hero = document.querySelector(".hero");
@@ -48,21 +47,36 @@ const DOM = {
         this.skillTags = document.querySelectorAll(".skill-tag");
         this.projectCards = document.querySelectorAll(".project-card");
         this.buttons = document.querySelectorAll(".btn");
+        this.mobileNavToggle = document.querySelector(".mobile-nav-toggle");
+        console.log('[DEBUG] DOM.init() called. Hamburger:', this.hamburger, 'Sidebar:', this.sidebar);
     }
 };
 
-// Mobile Navigation with improved performance
-class MobileNavigation {
+// Sidebar Navigation with improved performance
+class SidebarNavigation {
     constructor() {
         this.isOpen = false;
+        this.overlay = null;
         this.init();
     }
 
     init() {
-        if (!DOM.hamburger || !DOM.navMenu) return;
+        if (!DOM.hamburger || !DOM.sidebar) return;
+
+        // Create overlay if not present
+        this.overlay = document.querySelector('.sidebar-overlay');
+        if (!this.overlay) {
+            this.overlay = document.createElement('div');
+            this.overlay.className = 'sidebar-overlay';
+            document.body.appendChild(this.overlay);
+        }
+        this.overlay.addEventListener('click', this.close.bind(this));
 
         // Toggle navigation
-        DOM.hamburger.addEventListener("click", this.toggle.bind(this));
+        DOM.hamburger.addEventListener("click", (e) => {
+            console.log('[DEBUG] Hamburger clicked');
+            this.toggle();
+        });
         
         // Close on link click
         DOM.navLinks.forEach(link => {
@@ -79,23 +93,27 @@ class MobileNavigation {
     toggle() {
         this.isOpen = !this.isOpen;
         DOM.hamburger.classList.toggle("active", this.isOpen);
-        DOM.navMenu.classList.toggle("active", this.isOpen);
-        
-        // Prevent body scrolling when menu is open
-        document.body.style.overflow = this.isOpen ? 'hidden' : '';
+        DOM.sidebar.classList.toggle("active", this.isOpen);
+        if (this.overlay) this.overlay.classList.toggle('active', this.isOpen);
+        console.log('[DEBUG] Sidebar toggled. isOpen:', this.isOpen);
+        // Prevent body scrolling when menu is open on mobile
+        if (window.innerWidth <= 768) {
+            document.body.style.overflow = this.isOpen ? 'hidden' : '';
+        }
     }
 
     close() {
         if (!this.isOpen) return;
         this.isOpen = false;
         DOM.hamburger.classList.remove("active");
-        DOM.navMenu.classList.remove("active");
+        DOM.sidebar.classList.remove("active");
+        if (this.overlay) this.overlay.classList.remove('active');
         document.body.style.overflow = '';
     }
 
     handleOutsideClick(e) {
-        if (!this.isOpen) return;
-        if (!DOM.hamburger.contains(e.target) && !DOM.navMenu.contains(e.target)) {
+        if (!this.isOpen || window.innerWidth > 768) return;
+        if (!DOM.hamburger.contains(e.target) && !DOM.sidebar.contains(e.target) && !DOM.mobileNavToggle.contains(e.target)) {
             this.close();
         }
     }
@@ -233,29 +251,20 @@ class ScrollHandler {
     }
 
     updateOnScroll() {
-        this.updateNavbar();
         this.updateActiveLink();
         this.updateParallax();
         this.ticking = false;
     }
 
-    updateNavbar() {
-        if (!DOM.navbar) return;
-        
-        const scrolled = window.pageYOffset > 50;
-        DOM.navbar.classList.toggle("scrolled", scrolled);
-    }
-
     updateActiveLink() {
         if (!DOM.sections || !DOM.navLinks) return;
 
-        const navbarHeight = DOM.navbar?.offsetHeight || 0;
         const scrollPosition = window.pageYOffset;
         let current = "";
 
         // Find current section
         DOM.sections.forEach(section => {
-            const sectionTop = section.offsetTop - navbarHeight - 100;
+            const sectionTop = section.offsetTop - 100;
             const sectionHeight = section.clientHeight;
             
             if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
@@ -614,7 +623,7 @@ class App {
             // Initialize components
             this.components.push(new ErrorHandler());
             this.components.push(new PerformanceOptimizer());
-            this.components.push(new MobileNavigation());
+            this.components.push(new SidebarNavigation());
             this.components.push(new SmoothScroll());
             this.components.push(new ScrollHandler());
             this.components.push(new AnimationObserver());
@@ -630,4 +639,53 @@ class App {
 
 // Start the application
 const app = new App();
+
+// --- Navbar Active Link Handling ---
+function updateActiveNavLinks() {
+    const sections = document.querySelectorAll('section[id]');
+    const navbarLinks = document.querySelectorAll('.navbar-link');
+    const sidebarLinks = document.querySelectorAll('.nav-link');
+    let scrollY = window.pageYOffset;
+    let found = false;
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 80;
+        const sectionHeight = section.offsetHeight;
+        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight && !found) {
+            // Set active for navbar
+            navbarLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${section.id}`);
+            });
+            // Set active for sidebar
+            sidebarLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${section.id}`);
+            });
+            found = true;
+        }
+    });
+    // If no section found (top of page), set Home active
+    if (!found) {
+        navbarLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#home');
+        });
+        sidebarLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#home');
+        });
+    }
+}
+
+window.addEventListener('scroll', updateActiveNavLinks, { passive: true });
+window.addEventListener('DOMContentLoaded', updateActiveNavLinks);
+
+// Click: set active immediately
+function handleNavLinkClick(e) {
+    if (e.target.classList.contains('navbar-link')) {
+        document.querySelectorAll('.navbar-link').forEach(link => link.classList.remove('active'));
+        e.target.classList.add('active');
+    }
+    if (e.target.classList.contains('nav-link')) {
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        e.target.classList.add('active');
+    }
+}
+document.addEventListener('click', handleNavLinkClick);
 

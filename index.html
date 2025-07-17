@@ -12,53 +12,115 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Desktop Navbar -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="#home" class="logo-link">
-                    <div class="logo">
-                        <span class="logo-icon">HN</span>
-                        <div class="logo-text">
-                            <span class="logo-name">Hamza Nassif</span>
-                            <span class="logo-title">DevOps Engineer</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#home" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#experience" class="nav-link">Experience</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#education" class="nav-link">Education</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#skills" class="nav-link">Skills</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#certifications" class="nav-link">Certifications</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#projects" class="nav-link">Projects</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#contact" class="nav-link">Contact</a>
-                </li>
+        <div class="navbar-container">
+            <a href="#home" class="navbar-logo">
+                <span class="logo-icon">HN</span>
+                <span class="logo-name">Hamza Nassif</span>
+            </a>
+            <ul class="navbar-menu">
+                <li class="navbar-item"><a href="#home" class="navbar-link active">Home</a></li>
+                <li class="navbar-item"><a href="#about" class="navbar-link">About</a></li>
+                <li class="navbar-item"><a href="#experience" class="navbar-link">Experience</a></li>
+                <li class="navbar-item"><a href="#education" class="navbar-link">Education</a></li>
+                <li class="navbar-item"><a href="#skills" class="navbar-link">Skills</a></li>
+                <li class="navbar-item"><a href="#certifications" class="navbar-link">Certifications</a></li>
+                <li class="navbar-item"><a href="#projects" class="navbar-link">Projects</a></li>
+                <li class="navbar-item"><a href="#contact" class="navbar-link">Contact</a></li>
             </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
         </div>
     </nav>
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">HN</span>
+                <div class="logo-text">
+                    <span class="logo-name">Hamza Nassif</span>
+                    <span class="logo-title">DevOps Engineer</span>
+                </div>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link active">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>About</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#experience" class="nav-link">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Experience</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#education" class="nav-link">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Education</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#skills" class="nav-link">
+                        <i class="fas fa-code"></i>
+                        <span>Skills</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#certifications" class="nav-link">
+                        <i class="fas fa-certificate"></i>
+                        <span>Certifications</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#projects" class="nav-link">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Projects</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="social-links">
+                <a href="https://github.com/nassifhamza" target="_blank" class="social-link">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/hamza-nassif-133152346/" target="_blank" class="social-link">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:hamza.nassif12@hotmail.com" class="social-link">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile Navigation Toggle -->
+    <div class="mobile-nav-toggle">
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-content">
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -560,6 +622,8 @@
             </div>
         </div>
     </footer>
+
+    </main>
 
     <script src="script.js" defer></script>
 </body>
